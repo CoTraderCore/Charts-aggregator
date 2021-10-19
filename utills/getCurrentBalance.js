@@ -2,7 +2,7 @@ require('dotenv').config()
 const Web3 = require('web3')
 const web3 = new Web3(process.env.WEB3_PROVIDER)
 const abi = require('../abi.js')
-const getEvent = require('../getEvent.js')
+
 
 module.exports = async (fundAddress) => {
   const fund = new web3.eth.Contract(abi.FUND_ABI, fundAddress)
