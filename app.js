@@ -1,13 +1,21 @@
-const getCurrentBalance = require('./utills/getCurrentBalance')
-const getAllFundsAddresses = require('./utills/getAllFundsAddresses')
+require('dotenv').config()
+const express = require('express')
+const app = express()
+const router = require('./router')
 
-const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-const FUND_ADDRESS = "0xc3c41FD78d7C579C9cCd008B9dBCe55ba4CE337C"
+const http = require('http').createServer(app)
+
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+const port = process.env.PORT || 9005
+
+app.use('/api', router)
 
 
-async function app(){
-  console.log(await getCurrentBalance(FUND_ADDRESS))
-  console.log(await getAllFundsAddresses())
-}
-
-app()
+http.listen(port)
+console.log('Listening on port ' + port + " Version 19/10/21")
