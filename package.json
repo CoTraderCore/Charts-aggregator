@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.11",
-    "web3": "^1.2.2",
     "bignumber.js": "^9.0.0",
-    "dotenv": "^7.0.0"
+    "dotenv": "^7.0.0",
+    "lodash": "^4.17.11",
+    "web3": "^1.2.2"
   },
   "bugs": {
     "url": "https://github.com/CoTraderCore/fund-profit-verification/issues"
