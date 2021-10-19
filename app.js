@@ -1,6 +1,6 @@
 require('dotenv').config()
 const Web3 = require('web3')
-const web3 = new Web3(process.env.INFURA)
+const web3 = new Web3(process.env.WEB3_PROVIDER)
 
 const abi = require('./abi.js')
 const getEvent = require('./getEvent.js')
@@ -63,103 +63,6 @@ async function runEvensChecker(address, abi){
     )
     insertOrIncreaseTokenValue(eventsObj[i].returnValues[2], eventsObj[i].returnValues[3])
     reduceTokenValue(eventsObj[i].returnValues[0], eventsObj[i].returnValues[1])
-    break
-
-    case 'BuyPool':
-    console.log(
-      `Buy pool event,
-       pool address ${eventsObj[i].returnValues[0]},
-       pool amount ${eventsObj[i].returnValues[1]},
-       connectorsAddress ${eventsObj[i].returnValues[2]},
-       connectorsAmount${eventsObj[i].returnValues[3]}
-       `)
-
-    // increase pool
-    insertOrIncreaseTokenValue(eventsObj[i].returnValues[0], eventsObj[i].returnValues[1])
-    // reduce connectors
-    connectorsAddress = eventsObj[i].returnValues[2] // JSON PARSE ???
-    connectorsAmount = eventsObj[i].returnValues[3] // JSON PARSE ???
-    for(let i = 0; i < connectorsAddress.length; i++){
-      reduceTokenValue(connectorsAddress[i], connectorsAmount[i])
-    }
-    break
-
-    case 'SellPool':
-    console.log(
-      `Sell pool event,
-       pool address ${eventsObj[i].returnValues[0]},
-       pool amount ${eventsObj[i].returnValues[1]},
-       connectorsAddress ${eventsObj[i].returnValues[2]},
-       connectorsAmount${eventsObj[i].returnValues[3]}
-       `)
-
-    // increase connectors
-    connectorsAddress = eventsObj[i].returnValues[2] // JSON PARSE ???
-    connectorsAmount = eventsObj[i].returnValues[3] // JSON PARSE ???
-    for(let i = 0; i < connectorsAddress.length; i++){
-      insertOrIncreaseTokenValue(connectorsAddress[i], connectorsAmount[i])
-    }
-    // reduce pool
-    reduceTokenValue(eventsObj[i].returnValues[0], eventsObj[i].returnValues[1])
-    break
-
-    case 'Loan':
-    console.log(
-      `Loan event,
-       CToken address ${eventsObj[i].returnValues[0]},
-       CToken amount ${eventsObj[i].returnValues[1]},
-       token address ${eventsObj[i].returnValues[2]},
-       token amount ${eventsObj[i].returnValues[3]}`
-    )
-
-    insertOrIncreaseTokenValue(eventsObj[i].returnValues[0], eventsObj[i].returnValues[1])
-    reduceTokenValue(eventsObj[i].returnValues[2], eventsObj[i].returnValues[3])
-    break
-
-    case 'Redeem':
-    console.log(
-      `Reedem event,
-       CToken address ${eventsObj[i].returnValues[0]},
-       CToken amount ${eventsObj[i].returnValues[1]},
-       token address ${eventsObj[i].returnValues[2]},
-       token amount ${eventsObj[i].returnValues[3]}`
-    )
-
-    reduceTokenValue(eventsObj[i].returnValues[0], eventsObj[i].returnValues[1])
-    insertOrIncreaseTokenValue(eventsObj[i].returnValues[2], eventsObj[i].returnValues[3])
-    break
-
-
-    case 'DefiCall':
-     if(eventsObj[i].returnValues[0] === "YEARN_DEPOSIT"){
-       console.log(
-         `YEARN_DEPOSIT event,
-         tokensToSend ${eventsObj[i].returnValues[1][0]},
-         amountsToSend ${eventsObj[i].returnValues[2][0]},
-         tokensToReceive ${eventsObj[i].returnValues[3][0]},
-         amountsToReceive ${eventsObj[i].returnValues[4][0]}
-         `
-       )
-
-       reduceTokenValue(eventsObj[i].returnValues[1][0], eventsObj[i].returnValues[2][0])
-       insertOrIncreaseTokenValue(eventsObj[i].returnValues[3][0], eventsObj[i].returnValues[4][0])
-     }
-     else if(eventsObj[i].returnValues[0] === "YEARN_WITHDRAW"){
-       console.log(
-         `YEARN_WITHDRAW event,
-         tokensToSend ${eventsObj[i].returnValues[1][0]},
-         amountsToSend ${eventsObj[i].returnValues[2][0]},
-         tokensToReceive ${eventsObj[i].returnValues[3][0]},
-         amountsToReceive ${eventsObj[i].returnValues[4][0]}
-         `
-       )
-
-       reduceTokenValue(eventsObj[i].returnValues[1][0], eventsObj[i].returnValues[2][0])
-       insertOrIncreaseTokenValue(eventsObj[i].returnValues[3][0], eventsObj[i].returnValues[4][0])
-     }
-     else{
-       console.error("UNKNOWN DEFI EVENT")
-     }
     break
     }
    }
