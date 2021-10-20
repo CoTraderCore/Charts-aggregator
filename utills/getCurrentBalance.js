@@ -17,7 +17,7 @@ module.exports = async (fundAddress) => {
     data.push({address:allTokenAddresses[i], balance, valueInUSD})
   }
 
-  return data
+  return { date:Number(Date.now() / 1000).toFixed(), data }
 }
 
 

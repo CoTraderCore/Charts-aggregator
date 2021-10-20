@@ -67,3 +67,14 @@ exports.updateFundValue = async (columnName, value, address, jsonTrue) => {
     throw err
   }
 }
+
+
+exports.getFundValue = async (columnName, address) => {
+  const q = "SELECT " + columnName + " FROM funds WHERE address like ?"
+  try {
+    const rows = await query(q, address)
+    return rows[0]
+  } catch(err) {
+    throw err
+  }
+}

@@ -11,7 +11,8 @@ module.exports = () => {
 }
 
 // set global time
-store.set('time', Date.now() / 1000)
+store.clearAll()
+store.set('time', Number(Date.now() / 1000).toFixed())
 store.set('initialized', false)
 
 // check if Trade open each 3 seconds
@@ -25,13 +26,12 @@ async function run() {
       initFunds()
 
     // define time period for update
-    const currentTime = Date.now() / 1000
+    const currentTime = Number(Date.now() / 1000).toFixed()
     const storedTime = store.get('time')
-    const delay = process.env.DELAY || 900
+    const delay = Number(process.env.DELAY || 900)
 
-    if(currentTime >= storedTime + delay){
-      console.log("Run updater")
-      store.set('time', Date.now() / 1000)
+    if(Number(currentTime) >= Number(storedTime + delay)){
+      store.set('time', Number(Date.now() / 1000).toFixed())
       updater()
     }else{
       console.log("No need update")
@@ -47,16 +47,21 @@ async function initFunds() {
 
   for(let i=0; i<allFunds.length; i++){
     const balance = await getCurrentBalance(allFunds[i])
-    mysql.insertFund(allFunds[i], balance)
+    mysql.insertFund(allFunds[i], [balance])
   }
 
   store.set('initialized', true)
 }
 
 async function updater(){
+  console.log("Run updater")
   const allFunds = await getAllFundsAddresses()
+  const prevData = await mysql.getFundValue('balance', allFunds[i])
 
   for(let i=0; i<allFunds.length; i++){
-    // console.log(await getCurrentBalance(allFunds[i]))
+    const balance = await getCurrentBalance(allFunds[i])
+    const prevData = await mysql.getFundValue('balance', allFunds[i])
+    const newData = prevData.push(balance)
+    mysql.updateFundValue('balance', newData, allFunds[i], true)
   }
 }
