@@ -2,7 +2,7 @@ require('dotenv').config()
 const getCurrentBalance = require('../utills/getCurrentBalance')
 const getAllFundsAddresses = require('../utills/getAllFundsAddresses')
 const store = require('store')
-const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+const mysql = require('../mysql')
 
 let intervalID = 0
 
@@ -43,6 +43,13 @@ async function run() {
 
 async function initFunds() {
   console.log("INIT funds")
+  const allFunds = await getAllFundsAddresses()
+
+  for(let i=0; i<allFunds.length; i++){
+    const balance = await getCurrentBalance(allFunds[i])
+    mysql.insertFund(allFunds[i], balance)
+  }
+
   store.set('initialized', true)
 }
 
@@ -50,6 +57,6 @@ async function updater(){
   const allFunds = await getAllFundsAddresses()
 
   for(let i=0; i<allFunds.length; i++){
-    console.log(await getCurrentBalance(allFunds[i]))
+    // console.log(await getCurrentBalance(allFunds[i]))
   }
 }

@@ -17,7 +17,7 @@ connection.connect((err) => {
 const query = util.promisify(connection.query).bind(connection);
 
 exports.getAllFunds = async () => {
-  const q = "SELECT * FROM list"
+  const q = "SELECT * FROM funds"
   try {
     const rows = await query(q)
     return rows
@@ -27,7 +27,7 @@ exports.getAllFunds = async () => {
 }
 
 exports.getFund = async (address) => {
-  const q = "SELECT * FROM list WHERE address = ?"
+  const q = "SELECT * FROM funds WHERE address = ?"
   try {
     const rows = await query(q, address)
     return rows[0]
@@ -55,7 +55,7 @@ exports.insertFund = async (
 
 // Update single column for a certain address
 exports.updateFundValue = async (columnName, value, address, jsonTrue) => {
-  const q = "UPDATE list SET " + columnName + " = ? WHERE address = ?"
+  const q = "UPDATE funds SET " + columnName + " = ? WHERE address = ?"
   let _value = value
   if(jsonTrue){
     _value = JSON.stringify(value)
