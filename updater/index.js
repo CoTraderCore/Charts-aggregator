@@ -27,7 +27,7 @@ async function run() {
     // define time period for update
     const currentTime = Number(Date.now() / 1000).toFixed()
     const storedTime = store.get('time')
-    const delay = Number(process.env.DELAY || 86400) // delay 24 hours 
+    const delay = Number(process.env.DELAY || 86400) // delay 24 hours
 
     if(Number(currentTime) >= Number(storedTime) + Number(delay)){
       store.set('time', Number(Date.now() / 1000).toFixed())

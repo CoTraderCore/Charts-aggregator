@@ -15,10 +15,32 @@ module.exports = async (fundAddress) => {
     const balance = await fund.methods.getFundTokenHolding(allTokenAddresses[i]).call()
     const valueInUSD = await getValueFromRouter(allTokenAddresses[i], balance)
     const valueInUSDFromWei = web3.utils.fromWei(String(valueInUSD))
-    data.push({ address:allTokenAddresses[i], balance, valueInUSD, valueInUSDFromWei })
+
+    data.push({
+      address:allTokenAddresses[i],
+      balance,
+      valueInUSD,
+      valueInUSDFromWei
+    })
   }
 
-  return { date:Number(Date.now() / 1000).toFixed(), data }
+  const fundProfit = await fund.methods.calculateFundProfit().call()
+  const fundProfitFromWei = web3.utils.fromWei(String(fundProfit))
+  const fundValue = await fund.methods.calculateFundValue().call()
+  const fundValueFromWei = web3.utils.fromWei(String(fundValue))
+  const totalWeiDeposited = await fund.methods.totalWeiDeposited().call()
+  const totalWeiWithdrawn = await fund.methods.totalWeiWithdrawn().call()
+
+  return {
+    date:Number(Date.now() / 1000).toFixed(),
+    tokens:data,
+    fundProfit,
+    fundProfitFromWei,
+    fundValue,
+    fundValueFromWei,
+    totalWeiDeposited,
+    totalWeiWithdrawn
+  }
 }
 
 
