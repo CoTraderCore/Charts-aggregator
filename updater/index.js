@@ -27,7 +27,7 @@ async function run() {
     // define time period for update
     const currentTime = Number(Date.now() / 1000).toFixed()
     const storedTime = store.get('time')
-    const delay = Number(process.env.DELAY || 900)
+    const delay = Number(process.env.DELAY || 86400) // delay 24 hours 
 
     if(Number(currentTime) >= Number(storedTime) + Number(delay)){
       store.set('time', Number(Date.now() / 1000).toFixed())
@@ -37,7 +37,7 @@ async function run() {
     }
 
     // set new interval
-    intervalID = setTimeout(run, 5000)
+    intervalID = setTimeout(run, 60000)
 }
 
 async function initFunds() {

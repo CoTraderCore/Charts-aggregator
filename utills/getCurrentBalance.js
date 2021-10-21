@@ -14,7 +14,8 @@ module.exports = async (fundAddress) => {
   for(let i = 0; i < allTokenAddresses.length; i++){
     const balance = await fund.methods.getFundTokenHolding(allTokenAddresses[i]).call()
     const valueInUSD = await getValueFromRouter(allTokenAddresses[i], balance)
-    data.push({address:allTokenAddresses[i], balance, valueInUSD})
+    const valueInUSDFromWei = web3.utils.fromWei(String(valueInUSD))
+    data.push({ address:allTokenAddresses[i], balance, valueInUSD, valueInUSDFromWei })
   }
 
   return { date:Number(Date.now() / 1000).toFixed(), data }
