@@ -30,11 +30,11 @@ async function run() {
     const storedTime = store.get('time')
     const delay = Number(process.env.DELAY || 900)
 
-    if(Number(currentTime) >= Number(storedTime + delay)){
+    if(Number(currentTime) >= Number(storedTime) + Number(delay)){
       store.set('time', Number(Date.now() / 1000).toFixed())
       updater()
     }else{
-      console.log("No need update")
+      console.log("Next update in :", Number(storedTime) + Number(delay) - Number(currentTime), "sec")
     }
 
     // set new interval
@@ -56,12 +56,13 @@ async function initFunds() {
 async function updater(){
   console.log("Run updater")
   const allFunds = await getAllFundsAddresses()
-  const prevData = await mysql.getFundValue('balance', allFunds[i])
 
   for(let i=0; i<allFunds.length; i++){
     const balance = await getCurrentBalance(allFunds[i])
     const prevData = await mysql.getFundValue('balance', allFunds[i])
-    const newData = prevData.push(balance)
-    mysql.updateFundValue('balance', newData, allFunds[i], true)
+    const parsedData = JSON.parse(JSON.parse(JSON.stringify(prevData)).balance)
+    parsedData.push(balance)
+    mysql.updateFundValue('balance', parsedData, allFunds[i], true)
+    console.log("Updated for address", allFunds[i])
   }
 }
