@@ -11,7 +11,6 @@ module.exports = () => {
 }
 
 // set global time
-store.clearAll()
 store.set('time', Number(Date.now() / 1000).toFixed())
 store.set('initialized', false)
 
@@ -63,6 +62,5 @@ async function updater(){
     const parsedData = JSON.parse(JSON.parse(JSON.stringify(prevData)).balance)
     parsedData.push(balance)
     mysql.updateFundValue('balance', parsedData, allFunds[i], true)
-    console.log("Updated for address", allFunds[i])
   }
 }

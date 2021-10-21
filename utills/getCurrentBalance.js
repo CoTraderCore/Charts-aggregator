@@ -22,15 +22,23 @@ module.exports = async (fundAddress) => {
 
 
 async function getValueFromRouter(address, amount) {
-  const router = new web3.eth.Contract(abi.ROUTER_ABI, config.UNIROUTER)
+  if(amount <= 0)
+    return 0
 
-  if(String(config.USDADDRESS).toLowerCase() === String(config.USDADDRESS).toLowerCase(address))
+  if(String(address).toLowerCase() === String(config.USDADDRESS).toLowerCase())
      return amount
 
   try{
-    const result = router.getAmountOut([address, config.USDADDRESS], amount)
+    const router = new web3.eth.Contract(abi.ROUTER_ABI, config.UNIROUTER)
+    const from = String(address).toLowerCase() === String(config.ETH).toLowerCase()
+    ? config.WETH
+    : address
+
+    const result = await router.methods.getAmountsOut(amount, [from, config.USDADDRESS]).call()
     return result[1]
-  }catch(e){
+  }
+  catch(e){
+    // console.log("err")
     return 0
   }
 }
