@@ -7,7 +7,7 @@ DB_USER=
 DB_PASS=
 DB_NAME=FundsChartsBSC
 PORT=9011
-DELAY=60
+DELAY=86400
 WEB3_PROVIDER=https://bsc-dataseed1.defibit.io
 ```
 
